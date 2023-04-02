@@ -5,7 +5,30 @@ if (!isset($_SESSION['userID'])) {
   header('Location: index.php');
 }
 
+$servername = "mysql_db";
+$username = "root";
+$password = "root";
+$dbname = "hutech_php";
+
+//connection to the database
+$conn = mysqli_connect($servername, $username, $password, $dbname)
+  or die("Unable to connect to MySQL");
+
+
 $userID = $_SESSION['userID'];
+
+$id = $_GET["id"];
+
+//execute the SQL query and return records
+$sql = "SELECT * FROM items where id=" . $id;
+
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+  $item = $result->fetch_assoc();
+} else {
+  header('Location: welcome.php');
+}
 ?>
 
 <!DOCTYPE html>
@@ -13,91 +36,62 @@ $userID = $_SESSION['userID'];
 
 <head>
   <meta charset="UTF-8">
-  <title></title>
+  <title>
+    <?php echo $item['name']; ?>
+  </title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <?php require_once('./lib.php'); ?>
 </head>
 
 <body>
+  <?php require_once('header.php'); ?>
 
+  <div class="mt-16 h-[calc(100vh-64px)] flex items-center justify-center">
+    <div class="card lg:card-side bg-base-100 shadow-xl">
+      <figure><img src="<?php echo $item['image_url']; ?>" alt="<?php echo $item['name']; ?>" /></figure>
+      <div class="card-body">
+        <h2 class="card-title">
+          <?php echo $item['name']; ?>
+          <span class="badge badge-secondary">
+            $
+            <?php echo $item['unit_price']; ?>
+          </span>
+        </h2>
 
-  <?php include 'header.php';
+        <div>
+          <p>
+            <?php echo $item['description']; ?>
+          </p>
+        </div>
 
+        <form class="form-control grow w-full mt-4" method="post" action="cart.php?id=<?php echo $id ?>">
+          <div class="">
+            <label for="price" class="label">
+              <span class="label-text">Unit price</span>
+            </label>
+            <input name="price" id="price" value="<?php echo $item['unit_price'] ?>" readonly type="text"
+              class="input input-bordered w-full" />
+          </div>
 
-  $id = $_GET["id"];
+          <div class="mt-2">
+            <label for="qty" class="label">
+              <span class="label-text">Unit price</span>
+            </label>
+            <input name="qty" id="qty" type="text" placeholder="Enter quantity"
+              class="input input-bordered w-full placeholder:italic" required inputmode="numeric" pattern="[0-9]*" />
+          </div>
 
-
-  //   echo 'user name :' . $_SESSION['username'];
-  
-  if (empty($_SESSION['username'])) {
-    //    header('location:index.php');
-  }
-
-  $servername = "mysql_db";
-  $username = "root";
-  $password = "root";
-  $dbname = "hutech_php";
-
-  //connection to the database
-  $conn = mysqli_connect($servername, $username, $password, $dbname)
-    or die("Unable to connect to MySQL");
-
-  //execute the SQL query and return records
-  $sql = "SELECT * FROM items where id=" . $id;
-  ?>
-
-  <table class="table">
-    <?php
-    $result = $conn->query($sql);
-
-    if ($result->num_rows > 0) {
-      // output data of each row
-      while ($row = $result->fetch_assoc()) {
-
-        $uPrice = $row["unit_price"];
-
-        echo "<tr>";
-        echo "<td><h3> " . $row["name"] . "</h3></td><td><h4>  Price: " . $uPrice . "</h4></td><br>";
-        echo "</tr>";
-        echo "<tr>";
-        echo "<td> <center><img src=\"" . $row["image_url"] . "\" height=\"50%\" width=\"70%\"></img></center></td>";
-        echo "</tr>";
-      }
-    } else {
-      echo "0 results";
-    }
-    $conn->close();
-    ?>
-
-
-
-  </table>
-
-  <form class="form-horizontal" method="post" action="cart.php?id=<?php echo $id ?>">
-    <div class="form-group">
-      <label class="control-label col-sm-2" for="user"> Unit Price :</label>
-      <div class="col-sm-10">
-        <input name="price" type="text" value="<?php echo $uPrice ?>" readonly="readonly" class="form-control" id="user"
-          readonly="readonly">
+          <div class="card-actions justify-end mt-auto">
+            <button type="submit" class="btn btn-outline btn-primary">Add to Cart</button>
+          </div>
+        </form>
       </div>
     </div>
-
-    <div class="form-group">
-      <label class="control-label col-sm-2" for="add"> Quantity :</label>
-      <div class="col-sm-10">
-        <input type="text" name="qty" class="form-control" id="user" placeholder="Enter Quantity"
-          required="Enter Quantity">
-      </div>
-    </div>
-
-    <div class="form-group">
-      <div class="col-sm-offset-2 col-sm-10">
-        <button type="submit" class="btn btn-default">Add to Cart</button>
-      </div>
-    </div>
-  </form>
+  </div>
 </body>
 
 </html>
+
+<?php
+$conn->close();
+?>

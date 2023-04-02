@@ -61,6 +61,7 @@ $conn = mysqli_connect($servername, $username, $password, $dbname)
                 <h2 class="card-title">
                   <?php echo $row['name']; ?>
                   <div class="badge badge-secondary">
+                    $
                     <?php echo $row['unit_price']; ?>
                   </div>
                 </h2>

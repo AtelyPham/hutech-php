@@ -6,6 +6,35 @@ if (!isset($_SESSION['userID'])) {
 }
 
 $userID = $_SESSION['userID'];
+
+$servername = "mysql_db";
+$username = "root";
+$password = "root";
+$dbname = "hutech_php";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+// Check connection
+if ($conn->connect_error) {
+  die("Connection failed: " . $conn->connect_error);
+}
+
+
+$id = $_GET["id"];
+
+$price = $_POST["price"];
+$qty = $_POST["qty"];
+
+$amount = $price * $qty;
+
+$sql = "INSERT INTO cart(userid, itemid, quanity, isActive)
+VALUES ('" . $userID . "', " . $id . ", " . $qty . ", 0)";
+
+if ($conn->query($sql) === TRUE) {
+  $last_id = $conn->insert_id;
+} else {
+  header('Location: item.php?id=' . $id . '&error=' . $conn->error);
+}
 ?>
 
 <!DOCTYPE html>
@@ -13,89 +42,49 @@ $userID = $_SESSION['userID'];
 
 <head>
   <meta charset="UTF-8">
-  <title></title>
+  <title>Cart</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <?php include 'lib.php'; ?>
 </head>
 
 <body>
-
-
   <?php include 'header.php'; ?>
-  <?php
 
-  $id = $_GET["id"];
+  <div class="mt-16 h-[calc(100vh-64px)] flex items-center justify-center">
+    <form class="prose form-control w-full max-w-xs" method="post" action="purchase.php?Lastid=<?php echo $last_id ?>">
+      <h1 class="text-center">Your Cart</h1>
 
-  $price = $_POST["price"];
-  $qty = $_POST["qty"];
-
-  //echo $price;
-  //echo $qty;
-  $amount = $price * $qty;
-  //  echo "Total Amount ".$amount;
-  
-
-  ///////////////////////////////////
-  $servername = "mysql_db";
-  $username = "root";
-  $password = "root";
-  $dbname = "hutech_php";
-
-  // Create connection
-  $conn = new mysqli($servername, $username, $password, $dbname);
-  // Check connection
-  if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-  }
-
-  $sql = "INSERT INTO cart(userid, itemid, quanity,isActive)
-VALUES ('" . $userID . "', " . $id . ", " . $qty . ",0)";
-
-  if ($conn->query($sql) === TRUE) {
-    //  echo "New record created successfully";
-    $last_id = $conn->insert_id;
-  } else {
-    echo "Error: " . $sql . "<br>" . $conn->error;
-  }
-
-  $conn->close();
-
-
-
-  ?>
-
-
-  <form class="form-horizontal" method="post" action="purchase.php?Lastid=<?php echo $last_id ?>">
-    <div class="form-group">
-      <label class="control-label col-sm-2" for="user"> Unit Price :</label>
-      <div class="col-sm-10">
-        <input name="price" type="text" value="<?php echo $price ?>" readonly="readonly" class="form-control" id="user"
-          readonly="readonly">
+      <div>
+        <label for="price" class="label">
+          <span class="label-text">Unit Price</span>
+        </label>
+        <input readonly id="price" type="text" class="input input-bordered w-full max-w-xs" name="price"
+          value="<?php echo $price ?>">
       </div>
-    </div>
 
-    <div class="form-group">
-      <label class="control-label col-sm-2" for="add"> Quantity :</label>
-      <div class="col-sm-10">
-        <input type="text" name="qty" class="form-control" value="<?php echo $qty ?>" id="user" readonly="readonly">
+      <div class="mt-2">
+        <label for="qty" class="label">
+          <span class="label-text">Quantity</span>
+        </label>
+        <input readonly id="qty" type="text" class="input input-bordered w-full max-w-xs" name="qty"
+          value="<?php echo $qty ?>">
       </div>
-    </div>
 
-    <div class="form-group">
-      <label class="control-label col-sm-2" for="add"> Total Amount :</label>
-      <div class="col-sm-10">
-        <input type="text" name="tot" class="form-control" id="user" value="<?php echo $amount ?>" readonly="readonly">
+      <div class="mt-2">
+        <label for="tot" class="label">
+          <span class="label-text">Total amount</span>
+        </label>
+        <input readonly id="tot" type="text" class="input input-bordered w-full max-w-xs" name="tot"
+          value="<?php echo $amount ?>">
       </div>
-    </div>
 
-    <div class="form-group">
-      <div class="col-sm-offset-2 col-sm-10">
-        <button type="submit" class="btn btn-default">Purchase</button>
-      </div>
-    </div>
-  </form>
+      <button type="submit" class="btn btn-outline btn-primary mt-6">Purchase</button>
+    </form>
+  </div>
 </body>
 
 </html>
+
+<?php
+$conn->close();
+?>

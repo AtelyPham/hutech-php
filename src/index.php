@@ -1,4 +1,10 @@
 <?php
+session_start();
+
+if (isset($_SESSION['userID'])) {
+  header('Location: welcome.php');
+  exit();
+}
 
 if (isset($_GET['error'])) {
   $error = $_GET['error'];
