@@ -1,11 +1,27 @@
 <?php
 session_start();
 
+if (isset($_GET['clear_session'])) {
+  session_unset(); // Unset all session variables
+  session_destroy(); // Destroy the session
+  header("Location: index.php"); // Redirect the user to the homepage (replace with your desired URL)
+  exit(); // Stop executing the script
+}
+
 if (!isset($_SESSION['userID'])) {
   header('Location: index.php');
 }
 
 $userID = $_SESSION['userID'];
+
+$servername = "mysql_db";
+$username = "root";
+$password = "root";
+$dbname = "hutech_php";
+
+//connection to the database
+$conn = mysqli_connect($servername, $username, $password, $dbname)
+  or die("Unable to connect to MySQL");
 ?>
 
 <html>
@@ -20,47 +36,37 @@ $userID = $_SESSION['userID'];
 
 <body>
   <div>
-
-
     <?php include 'header.php'; ?>
-    <?php
-    //   echo 'user name :' . $_SESSION['username'];
-    
-    if (empty($_SESSION['username'])) {
-      //    header('location:index.php');
-    }
 
-
-    $servername = "mysql_db";
-    $username = "root";
-    $password = "root";
-    $dbname = "hutech_php";
-
-    //connection to the database
-    $conn = mysqli_connect($servername, $username, $password, $dbname)
-      or die("Unable to connect to MySQL");
-
-    //execute the SQL query and return records
-    $result = mysqli_query($conn, "SELECT * FROM items");
-    ?>
-
-    <h1>Welcome to the Online Shop</h1>
-    <h4> <br>Lets start to shopping.</h4>
-
-    <table class="table">
+    <div class="mt-16">
       <?php
-      while ($row = mysqli_fetch_array($result)) {
-        echo "<tr>";
-        echo "<td>" . $row["name"] . "</td> "
-          . "<td> <img src=\"" . $row["image_url"] . "\" height=\"55%\" width=\"50%\"></img></td>";
-        echo "<td><a href=item.php?id=" . $row["id"] . ">View More Details</td>";
-        echo "</tr>";
-
-      }
+      //execute the SQL query and return records
+      $result = mysqli_query($conn, "SELECT * FROM items");
       ?>
-    </table>
+
+      <h1>Welcome to the Online Shop</h1>
+      <h4> <br>Lets start to shopping.</h4>
+
+      <table class="table">
+        <?php
+        while ($row = mysqli_fetch_array($result)) {
+          echo "<tr>";
+          echo "<td>" . $row["name"] . "</td> "
+            . "<td> <img src=\"" . $row["image_url"] . "\" height=\"55%\" width=\"50%\"></img></td>";
+          echo "<td><a href=item.php?id=" . $row["id"] . ">View More Details</td>";
+          echo "</tr>";
+
+        }
+        ?>
+      </table>
+    </div>
   </div>
 </body>
 
 
 </html>
+
+<?php
+//close the connection
+mysqli_close($conn);
+?>

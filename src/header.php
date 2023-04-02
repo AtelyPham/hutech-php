@@ -1,4 +1,21 @@
-<header class="navbar fixed top-0 bg-base-100">
+<?php
+if (!empty($userID) && isset($conn)) {
+  $sql = "SELECT * FROM login WHERE username='$userID'";
+  $result = mysqli_query($conn, $sql);
+
+  if (mysqli_num_rows($result) === 0) {
+    // Result is empty
+    exit();
+  } else {
+    // Get the user as an associative array
+    $user = mysqli_fetch_assoc($result);
+  }
+} else {
+  // User is not logged in
+}
+?>
+
+<header class="navbar fixed z-10 top-0 bg-base-100">
   <div class="flex-1">
     <div class="flex">
       <img src="assets/car.svg" alt="Car" class="w-10 h-10" />
@@ -8,19 +25,41 @@
   <?php if (!empty($userID)): ?>
     <div class="flex-none">
       <div class="dropdown dropdown-end">
-        <label tabindex="0" class="btn btn-ghost btn-circle avatar">
-          <div class="w-10 rounded-full">
-            <img src="/images/stock/photo-1534528741775-53994a69daeb.jpg" />
-          </div>
+        <?php
+        $has_avatar = isset($user) && isset($user['avatar']);
+        $base_clxs = "btn btn-ghost btn-circle avatar";
+
+        // Set the class name based on the condition
+        if ($has_avatar) {
+          $class_name = $base_clxs;
+        } else {
+          $class_name = $base_clxs . " placeholder";
+        }
+        ?>
+
+        <label tabindex="0" class="<?php echo $class_name; ?>">
+          <?php if ($has_avatar): ?>
+            <div class="w-10 rounded-full">
+              <?php echo '<img src="/' . $user['avatar'] . '">'; ?>
+            </div>
+          <?php else: ?>
+            <div class="bg-neutral-focus text-neutral-content rounded-full w-10">
+              <?php echo '<span class="text-xl">' . substr($user['username'], 0, 2) . '</span>'; ?>
+            </div>
+          <?php endif; ?>
         </label>
-        <ul tabindex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
+        <ul tabindex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow-xl bg-base-100 rounded-box w-52">
+          <li class="px-4 py-2 italic">
+            Hello
+            <?php echo $user['username']; ?>
+          </li>
           <li>
             <a class="justify-between">
               Profile
               <span class="badge">New</span>
             </a>
           </li>
-          <li><a>Logout</a></li>
+          <li><a href="?clear_session=true">Logout</a></li>
         </ul>
       </div>
     </div>
