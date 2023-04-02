@@ -1,3 +1,13 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['userID'])) {
+  header('Location: index.php');
+}
+
+$userID = $_SESSION['userID'];
+?>
+
 <!DOCTYPE html>
 <html>
 
@@ -17,7 +27,6 @@
   <?php
 
   $id = $_GET["id"];
-  $userID = $_GET["userID"];
 
   $price = $_POST["price"];
   $qty = $_POST["qty"];
@@ -42,7 +51,7 @@
   }
 
   $sql = "INSERT INTO cart(userid, itemid, quanity,isActive)
-VALUES ('" . $userID . "', " . $id . ", " . $qty . ",1)";
+VALUES ('" . $userID . "', " . $id . ", " . $qty . ",0)";
 
   if ($conn->query($sql) === TRUE) {
     //  echo "New record created successfully";
@@ -58,8 +67,7 @@ VALUES ('" . $userID . "', " . $id . ", " . $qty . ",1)";
   ?>
 
 
-  <form class="form-horizontal" method="post"
-    action="purchase.php?Lastid=<?php echo $last_id ?>&userID=<?php echo $userID ?>">
+  <form class="form-horizontal" method="post" action="purchase.php?Lastid=<?php echo $last_id ?>">
     <div class="form-group">
       <label class="control-label col-sm-2" for="user"> Unit Price :</label>
       <div class="col-sm-10">

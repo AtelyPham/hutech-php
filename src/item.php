@@ -1,3 +1,13 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['userID'])) {
+  header('Location: index.php');
+}
+
+$userID = $_SESSION['userID'];
+?>
+
 <!DOCTYPE html>
 <html>
 
@@ -17,7 +27,6 @@
 
 
   $id = $_GET["id"];
-  $userID = $_GET["userID"];
 
 
   //   echo 'user name :' . $_SESSION['username'];
@@ -66,7 +75,7 @@
 
   </table>
 
-  <form class="form-horizontal" method="post" action="cart.php?id=<?php echo $id ?>&userID=<?php echo $userID ?>">
+  <form class="form-horizontal" method="post" action="cart.php?id=<?php echo $id ?>">
     <div class="form-group">
       <label class="control-label col-sm-2" for="user"> Unit Price :</label>
       <div class="col-sm-10">

@@ -55,7 +55,8 @@ CREATE TABLE `login` (
   `password` varchar(100) NOT NULL,
   `address` varchar(100) NOT NULL,
   `telephone` varchar(12) NOT NULL,
-  `email` varchar(50) NOT NULL
+  `email` varchar(50) NOT NULL,
+  `avatar` varchar(200) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 INSERT INTO `login` (`id`, `username`, `password`, `address`, `telephone`, `email`) VALUES

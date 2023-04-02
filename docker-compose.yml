@@ -16,6 +16,7 @@ services:
       MYSQL_ROOT_PASSWORD: root
     volumes:
       - './startup.sql:/docker-entrypoint-initdb.d/startup.sql'
+      - './form_dkcn.sql:/docker-entrypoint-initdb.d/form_dkcn.sql'
 
   phpmyadmin:
     image: phpmyadmin:latest

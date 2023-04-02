@@ -1,7 +1,13 @@
 <?php
+session_start();
+
+if (!isset($_SESSION['userID'])) {
+  header('Location: index.php');
+}
+
+$userID = $_SESSION['userID'];
 
 $idLast = $_GET["Lastid"];
-$userID = $_GET["userID"];
 
 
 $servername = "mysql_db";
@@ -16,10 +22,10 @@ if ($conn->connect_error) {
   die("Connection failed: " . $conn->connect_error);
 }
 
-$sql = "UPDATE cart SET isActive=0 WHERE id=$idLast";
+$sql = "UPDATE cart SET isActive=1 WHERE id=$idLast";
 
 if ($conn->query($sql) === TRUE) {
-  header('location:welcome.php?userID=' . $userID . '');
+  header('location:welcome.php');
 } else {
   echo "Error updating record: " . $conn->error;
 }

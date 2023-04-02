@@ -1,17 +1,25 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['userID'])) {
+  header('Location: index.php');
+}
+
+$userID = $_SESSION['userID'];
+?>
+
 <html>
 
 <head>
   <title>Online Shop - Welcome</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <?php require_once('./lib.php') ?>
 </head>
 
 
 <body>
-  <div class="container">
+  <div>
 
 
     <?php include 'header.php'; ?>
@@ -22,9 +30,7 @@
       //    header('location:index.php');
     }
 
-    $userID = $_GET["userID"];
-    //
-    
+
     $servername = "mysql_db";
     $username = "root";
     $password = "root";
@@ -47,7 +53,7 @@
         echo "<tr>";
         echo "<td>" . $row["name"] . "</td> "
           . "<td> <img src=\"" . $row["image_url"] . "\" height=\"55%\" width=\"50%\"></img></td>";
-        echo "<td><a href=item.php?id=" . $row["id"] . "&userID=" . $userID . ">View More Details</td>";
+        echo "<td><a href=item.php?id=" . $row["id"] . ">View More Details</td>";
         echo "</tr>";
 
       }

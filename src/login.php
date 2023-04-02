@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $user = $_POST['username'];
   $pass = $_POST['password'];
@@ -34,12 +36,15 @@ if ($result->num_rows > 0) {
     }
   }
   if ($x > 0) {
-    header('location:welcome.php?userID=' . $userID . '');
+    $_SESSION['userID'] = $userID;
+    header('location:welcome.php');
   } else {
-    echo "try again Bro";
+    $error = "Username or Password is incorrect";
+    header('location:index.php' . '?error=' . $error);
   }
 } else {
-  echo "0 results";
+  $error = "Not found";
+  header('location:index.php' . '?error=' . $error);
 }
 $conn->close();
 ?>
