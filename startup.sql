@@ -38,16 +38,17 @@ INSERT INTO `cart` (`id`, `userid`, `itemid`, `quanity`, `isActive`) VALUES
 CREATE TABLE `items` (
   `id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
+  `description` varchar(1024) NOT NULL,
   `unit_price` double NOT NULL,
   `image_url` varchar(150) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 INSERT INTO `items` (`id`, `name`, `unit_price`, `image_url`) VALUES
-(1, 'Honda Ridgeline', 6000000, 'https://article.images.consumerreports.org/prod/content/dam/CRO%20Images%202017/Magazine-Articles/April/CR-Inline-top-picks-Ridgeline-02-17'),
-(5, 'Tesla V800', 2080000, 'https://article.images.consumerreports.org/prod/content/dam/CRO%20Images%202017/Magazine-Articles/April/CR-Inline-top-picks-Toyota-Yaris-02-17'),
-(6, 'Ford F-150', 7000000, 'https://article.images.consumerreports.org/prod/content/dam/CRO%20Images%202018/Magazine/04April/CRM-Cars-Inline-TopTen-Ford-F150-2018-4-18'),
-(7, 'Toyota Highlander', 9000000, 'https://article.images.consumerreports.org/prod/content/dam/CRO%20Images%202018/Magazine/04April/CRM-Cars-Inline-TopTen-Toyota-Highlander-2018-4-18'),
-(8, 'Chevrolet Impala', 75620000, 'https://article.images.consumerreports.org/prod/content/dam/CRO%20Images%202018/Magazine/04April/CRM-Cars-inline-TopTen-Chevrolet-Imapla-2018-4-18');
+(1, 'Honda Ridgeline', 'Sports car with sleek lines, white racing stripes, and a powerful engine.', 6000000, 'https://article.images.consumerreports.org/prod/content/dam/CRO%20Images%202017/Magazine-Articles/April/CR-Inline-top-picks-Ridgeline-02-17'),
+(5, 'Tesla V800', 'SUV with tinted windows, leather seats, and top-of-the-line safety features.', 2080000, 'https://article.images.consumerreports.org/prod/content/dam/CRO%20Images%202017/Magazine-Articles/April/CR-Inline-top-picks-Toyota-Yaris-02-17'),
+(6, 'Ford F-150', 'Convertible with a retractable roof, chrome accents, and a high-tech stereo system.', 7000000, 'https://article.images.consumerreports.org/prod/content/dam/CRO%20Images%202018/Magazine/04April/CRM-Cars-Inline-TopTen-Ford-F150-2018-4-18'),
+(7, 'Toyota Highlander', 'Sedan with a fuel-efficient hybrid engine, touchscreen navigation, and panoramic sunroof.', 9000000, 'https://article.images.consumerreports.org/prod/content/dam/CRO%20Images%202018/Magazine/04April/CRM-Cars-Inline-TopTen-Toyota-Highlander-2018-4-18'),
+(8, 'Chevrolet Impala', 'Muscle car with racing-inspired decals, manual transmission, and a throaty exhaust note.', 75620000, 'https://article.images.consumerreports.org/prod/content/dam/CRO%20Images%202018/Magazine/04April/CRM-Cars-inline-TopTen-Chevrolet-Imapla-2018-4-18');
 
 CREATE TABLE `login` (
   `id` int(11) NOT NULL,

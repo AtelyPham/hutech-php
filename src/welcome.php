@@ -38,27 +38,45 @@ $conn = mysqli_connect($servername, $username, $password, $dbname)
   <div>
     <?php include 'header.php'; ?>
 
-    <div class="mt-16">
+    <div class="mt-16 p-6">
       <?php
       //execute the SQL query and return records
       $result = mysqli_query($conn, "SELECT * FROM items");
       ?>
 
-      <h1>Welcome to the Online Shop</h1>
-      <h4> <br>Lets start to shopping.</h4>
+      <div class="prose">
+        <h1>Welcome to the Online Shop</h1>
+        <h3>Lets start to shopping.</h3>
+      </div>
 
-      <table class="table">
+      <div class="mt-4 grid grid-cols-3 gap-4">
         <?php
+        // Iterate through the rows using mysqli_fetch_array
         while ($row = mysqli_fetch_array($result)) {
-          echo "<tr>";
-          echo "<td>" . $row["name"] . "</td> "
-            . "<td> <img src=\"" . $row["image_url"] . "\" height=\"55%\" width=\"50%\"></img></td>";
-          echo "<td><a href=item.php?id=" . $row["id"] . ">View More Details</td>";
-          echo "</tr>";
-
+          ?>
+          <div class="min-w-0 w-full">
+            <div class="card bg-base-100 min-w-96 shadow-xl">
+              <figure><img src="<?php echo $row['image_url']; ?>" alt="<?php echo $row['name']; ?>" /></figure>
+              <div class="card-body">
+                <h2 class="card-title">
+                  <?php echo $row['name']; ?>
+                  <div class="badge badge-secondary">
+                    <?php echo $row['unit_price']; ?>
+                  </div>
+                </h2>
+                <p>
+                  <?php echo $row['description']; ?>
+                </p>
+                <div class="card-actions justify-end">
+                  <a href="<?php echo 'item.php?id=' . $row['id'] ?>" class="btn btn-primary">More detail</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <?php
         }
         ?>
-      </table>
+      </div>
     </div>
   </div>
 </body>
