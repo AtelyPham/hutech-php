@@ -22,6 +22,17 @@ $dbname = "hutech_php";
 //connection to the database
 $conn = mysqli_connect($servername, $username, $password, $dbname)
   or die("Unable to connect to MySQL");
+
+$sql = "SELECT * FROM login WHERE username='$userID'";
+$result = mysqli_query($conn, $sql);
+
+if (mysqli_num_rows($result) === 0) {
+  exit();
+} else {
+  // Get the user as an associative array
+  $user = mysqli_fetch_assoc($result);
+  $isAdmin = $user['isAdmin'];
+}
 ?>
 
 <html>
@@ -70,6 +81,10 @@ $conn = mysqli_connect($servername, $username, $password, $dbname)
                 </p>
                 <div class="card-actions justify-end">
                   <a href="<?php echo 'item.php?id=' . $row['id'] ?>" class="btn btn-primary">More detail</a>
+                  <?php if ($isAdmin): ?>
+                    <a href="<?php echo 'edit.php?id=' . $row['id'] ?>" class="btn btn-secondary">Edit</a>
+                    <a href="<?php echo 'delete.php?id=' . $row['id'] ?>" class="btn btn-error">Delete</a>
+                  <?php endif; ?>
                 </div>
               </div>
             </div>

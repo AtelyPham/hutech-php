@@ -29,6 +29,11 @@ if ($result->num_rows > 0) {
 } else {
   header('Location: welcome.php');
 }
+
+// Calculate the average rating
+$sql = "SELECT AVG(rating) AS avg_rating FROM comments WHERE item_id = " . $id;
+$result = $conn->query($sql);
+$avg_rating = $result->fetch_assoc()['avg_rating'];
 ?>
 
 <!DOCTYPE html>
@@ -48,7 +53,7 @@ if ($result->num_rows > 0) {
 
   <div class="mt-16 h-[calc(100vh-64px)] flex items-center justify-center">
     <div class="card lg:card-side bg-base-100 shadow-xl">
-      <figure><img src="<?php echo $item['image_url']; ?>" alt="<?php echo $item['name']; ?>" /></figure>
+      <figure><img class="h-full" src="<?php echo $item['image_url']; ?>" alt="<?php echo $item['name']; ?>" /></figure>
       <div class="card-body">
         <h2 class="card-title">
           <?php echo $item['name']; ?>
@@ -56,6 +61,44 @@ if ($result->num_rows > 0) {
             $
             <?php echo $item['unit_price']; ?>
           </span>
+
+          <?php
+          // create radio buttons for the rating
+          $radio1 = "<input type='radio' name='rating' value='1'";
+          $radio2 = "<input type='radio' name='rating' value='2'";
+          $radio3 = "<input type='radio' name='rating' value='3'";
+          $radio4 = "<input type='radio' name='rating' value='4'";
+          $radio5 = "<input type='radio' name='rating' value='5'";
+
+          // Checked based on the average rating
+          if ($avg_rating <= 1) {
+            $radio1 .= " checked='checked'";
+          } else if ($avg_rating <= 2) {
+            $radio2 .= " checked='checked'";
+          } else if ($avg_rating <= 3) {
+            $radio3 .= " checked='checked'";
+          } else if ($avg_rating <= 4) {
+            $radio4 .= " checked='checked'";
+          } else {
+            $radio5 .= " checked='checked'";
+          }
+
+          $radio1 .= " disabled='disabled' class='mask mask-star-2 bg-orange-400' />";
+          $radio2 .= " disabled='disabled' class='mask mask-star-2 bg-orange-400' />";
+          $radio3 .= " disabled='disabled' class='mask mask-star-2 bg-orange-400' />";
+          $radio4 .= " disabled='disabled' class='mask mask-star-2 bg-orange-400' />";
+          $radio5 .= " disabled='disabled' class='mask mask-star-2 bg-orange-400' />";
+          ?>
+
+          <?php if ($avg_rating > 0) { ?>
+            <div class="rating rating-sm">
+              <?php echo $radio1; ?>
+              <?php echo $radio2; ?>
+              <?php echo $radio3; ?>
+              <?php echo $radio4; ?>
+              <?php echo $radio5; ?>
+            </div>
+          <?php } ?>
         </h2>
 
         <div>
@@ -81,7 +124,8 @@ if ($result->num_rows > 0) {
               class="input input-bordered w-full placeholder:italic" required inputmode="numeric" pattern="[0-9]*" />
           </div>
 
-          <div class="card-actions justify-end mt-auto">
+          <div class="card-actions justify-end mt-4">
+            <a href="<?php echo 'rate.php?id=' . $item['id'] ?>" class="btn btn-outline btn-secondary">Rate the Car</a>
             <button type="submit" class="btn btn-outline btn-primary">Add to Cart</button>
           </div>
         </form>
